@@ -3,7 +3,7 @@ if($_GET['code']){
   $code = $_GET['code'];
   $client_id = '986293143775-n7juk31aha6scli5j007m7j74llrg14k.apps.googleusercontent.com';
   $client_secret = 'i7aZh-f6BA27vpg1ojh903eg';
-  $redirect_uri = 'http://localhost/admin_services/blob/master/api_google_calendar/index.php';
+  $redirect_uri = 'http://localhost/admin_services/api_google_calendar/index.php';
   $grant_type = 'authorization_code';
   $url = "https://www.googleapis.com/oauth2/v4/token";
   $content = "code=" . $code . "&client_id=" . $client_id . "&client_secret=" . $client_secret . "&redirect_uri=" . $redirect_uri . "&grant_type=" . $grant_type;
