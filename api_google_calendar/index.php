@@ -21,7 +21,7 @@ if($_GET['code']){
       $evenement1 = json_encode(array("start" => array("date" => "2016-02-01"),"end" => array("date" => "2017-03-15"),"description" => "évent1"));
       var_dump($evenement1);
       $url_create_event = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
-      $content_create_event = "access_token=" . urlencode($response->access_token);
+      $content_create_event = "access_token=".$response->access_token;
       $curl = curl_init($url_create_event);
       curl_setopt($curl, CURLOPT_HEADER, false);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
