@@ -15,12 +15,12 @@ if($_GET['code']){
   $response = curl_exec($curl);
   curl_close($curl);
   unset($curl);
-  var_dump($response);
+  var_dump($response = json_decode($response));
   //create event
-  if(!empty($response) && !empty($response['access_token'])){
+  if(!empty($response) && !empty($response->access_token)){
     for($i = 0; $i<30 ; $i++){
       $url_create_event = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
-      $content_create_event = "access_token=" . urlencode($response['access_token']);
+      $content_create_event = "access_token=".$response->access_token;
       $curl = curl_init($url_create_event);
       curl_setopt($curl, CURLOPT_HEADER, false);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -29,7 +29,7 @@ if($_GET['code']){
       $response_creating_event = curl_exec($curl);
       curl_close($curl);
       if(!empty($response_creating_event)){
-        echo 'Evénement ';
+        echo 'Evénement '.$i;
         var_dump($response_creating_event);
       }
     }
