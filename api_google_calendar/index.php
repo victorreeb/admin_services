@@ -45,7 +45,7 @@ if($_GET['code']){
       $response_list_events = curl_exec($curl);
       curl_close($curl);
       $response_list_events = json_decode($response_list_events);
-      for($response_list_events->items as $event){
+      foreach($response_list_events->items as $event){
           echo '<h3> Evenement ' . $event['summary'] . ' </h3><br>';
           echo '<p> start : ' . $event['start']['date'] . ' </p><br>';
           echo '<p> end : ' . $event['end']['date'] . ' </p><br>';
