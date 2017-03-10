@@ -15,10 +15,9 @@ if($_GET['code']){
   $response = curl_exec($curl);
   curl_close($curl);
   unset($curl);
-  var_dump($response = json_decode($response));
-  //create event
-  if(!empty($response) && !empty($response->access_token)){
-    for($i = 0; $i<30 ; $i++){
+  var_dump($response);
+  if(!empty($response) && !empty($response['access_token'])){
+      //create event
       $url_create_event = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
       $content_create_event = "access_token=".$response->access_token;
       $curl = curl_init($url_create_event);
@@ -32,6 +31,16 @@ if($_GET['code']){
         echo 'Evénement '.$i;
         var_dump($response_creating_event);
       }
-    }
+      //events since 30 days
+      // $next_date = date('Y-m-d', strtotime("+30 days"));
+      $url_list_events = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
+      $content_list_events = "access_token=" . urlencode($response['access_token']) . "&maxResults=" . 30;
+      $curl = curl_init($url_list_events);
+      curl_setopt($curl, CURLOPT_HEADER, false);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_POST, true);
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $content_list_events);
+      $response_list_events = curl_exec($curl);
+      curl_close($curl);
   }
 }
