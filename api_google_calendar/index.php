@@ -18,7 +18,7 @@ if($_GET['code']){
   var_dump($response);
   if(!empty($response) && !empty($response->access_token)){
       //create event
-      $evenement1 = json_encode(array("start" => array("date" => "2016-02-01"),"end" => array("date" => "2017-03-15"),"description" => "évent1"));
+      $evenement1 = json_encode(array("start" => array("date" => "2016-02-01"),"end" => array("date" => "2017-03-15"),"summary" => "évent1"));
       var_dump($evenement1);
       $url_create_event = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
       $content_create_event = "access_token=".$response->access_token;
@@ -29,14 +29,17 @@ if($_GET['code']){
       curl_setopt($curl, CURLOPT_POSTFIELDS, $content_create_event . $evenement1);
       $response_creating_event = curl_exec($curl);
       curl_close($curl);
-      if(!empty($response_creating_event)){
+      $response_creating_event = json_decode($response_creating_event);
+      if(!empty($response_creating_event) && !empty($response_creating_event->status) && $response_creating_event->status == 'confirmed'){
         echo '<h3> Evénement créé ! </h3><br>';
-        var_dump($response_creating_event);
+      }else{
+        echo '<h3> Evénement non créé ! </h3><br>';
       }
-      //events since 30 days
+      var_dump($response_creating_event);
+
       // $next_date = date('Y-m-d', strtotime("+30 days"));
       $url_list_events = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
-      $content_list_events = "access_token=" . urlencode($response['access_token']) . "&maxResults=" . 30;
+      $content_list_events = "access_token=" . urlencode($response->access_token) . "&maxResults=" . 30;
       $curl = curl_init($url_list_events);
       curl_setopt($curl, CURLOPT_HEADER, false);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -45,11 +48,14 @@ if($_GET['code']){
       $response_list_events = curl_exec($curl);
       curl_close($curl);
       $response_list_events = json_decode($response_list_events);
-      foreach($response_list_events->items as $event){
-          echo '<h3> Evenement ' . $event['summary'] . ' </h3><br>';
-          echo '<p> start : ' . $event['start']['date'] . ' </p><br>';
-          echo '<p> end : ' . $event['end']['date'] . ' </p><br>';
-          echo '<hr>';
+      if(!empty($response_list_events) && !empty($response_list_events->items)){
+        foreach($response_list_events->items as $event){
+            echo '<h3> Evenement ' . $event['summary'] . ' </h3><br>';
+            echo '<p> start : ' . $event['start']['date'] . ' </p><br>';
+            echo '<p> end : ' . $event['end']['date'] . ' </p><br>';
+            echo '<hr>';
+        }
       }
+
   }
 }
